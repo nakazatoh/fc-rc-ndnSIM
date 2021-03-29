@@ -56,6 +56,9 @@ Data::wireEncode(EncodingImpl<TAG>& encoder, bool wantUnsignedPortionOnly) const
 
   size_t totalLength = 0;
 
+  //Function
+  totalLength += getFunction().wireEncode(encoder);
+
   // SignatureValue
   if (!wantUnsignedPortionOnly) {
     if (!m_signature) {
@@ -177,6 +180,14 @@ Data::wireDecode(const Block& wire)
         lastElement = 5;
         break;
       }
+      case tlv::Function: {
+        if (lastElement >=6) {
+          NDN_THROW(Error("Function element is out of order"));
+        }
+        m_function.wireDecode(*element);
+        lastElement = 6;
+        break;
+      }
       default: {
         if (tlv::isCriticalType(element->type())) {
           NDN_THROW(Error("unrecognized element of critical type " + to_string(element->type())));
@@ -258,6 +269,13 @@ Data::setContent(const uint8_t* value, size_t valueSize)
   resetWire();
   m_content = makeBinaryBlock(tlv::Content, value, valueSize);
   return *this;
+}
+
+void
+Data::setContent2(const uint8_t* value, size_t valueSize) const
+{
+  m_wire.reset();
+  m_content = makeBinaryBlock(tlv::Content, value, valueSize);
 }
 
 Data&
