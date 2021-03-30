@@ -42,6 +42,7 @@ build/
 .waf*
 src/NDNabstraction
 !build/ns3
+build/ns3/ndnSIM
 doc/html/
 doc/latex/
 \.rej$
