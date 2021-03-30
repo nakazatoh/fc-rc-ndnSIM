@@ -41,7 +41,7 @@ build/
 *.pyc
 .waf*
 src/NDNabstraction
-build/
+!build/ns3
 doc/html/
 doc/latex/
 \.rej$
