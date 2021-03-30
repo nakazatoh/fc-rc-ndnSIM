@@ -24,6 +24,7 @@
 
 #include "ndn-cxx/delegation-list.hpp"
 #include "ndn-cxx/name.hpp"
+#include "ndn-cxx/function.hpp"
 #include "ndn-cxx/detail/packet-base.hpp"
 #include "ndn-cxx/util/time.hpp"
 
@@ -116,6 +117,9 @@ public: // matching
   bool
   matchesInterest(const Interest& other) const;
 
+  void
+  removeHeadFunction() const;
+
 public: // element access
   const Name&
   getName() const noexcept
@@ -128,6 +132,26 @@ public: // element access
    */
   Interest&
   setName(const Name& name);
+
+  const Function&
+  getFunction() const
+  {
+    return m_function;
+  }
+
+  void
+  setFunction(const Function& function) const
+  {
+    m_function = function;
+    m_wire.reset();
+    //return *this;
+  }
+
+  bool
+  hasFunction() const
+  {
+    return m_function.toUri() != "/" ? true : false;
+  }
 
   /** @brief Declare the default CanBePrefix setting of the application.
    *
@@ -235,6 +259,9 @@ public: // element access
    */
   Interest&
   setNonce(uint32_t nonce);
+
+  void setNonce2
+  (uint32_t nonce) const;
 
   /** @brief Change nonce value.
    *
@@ -391,6 +418,7 @@ private:
   static bool s_autoCheckParametersDigest;
 
   Name m_name;
+  mutable Function m_function;
   DelegationList m_forwardingHint;
   mutable optional<uint32_t> m_nonce;
   time::milliseconds m_interestLifetime;

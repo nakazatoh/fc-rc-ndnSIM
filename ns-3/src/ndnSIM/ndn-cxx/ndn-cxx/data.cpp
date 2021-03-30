@@ -56,9 +56,6 @@ Data::wireEncode(EncodingImpl<TAG>& encoder, bool wantUnsignedPortionOnly) const
 
   size_t totalLength = 0;
 
-  //Function
-  totalLength += getFunction().wireEncode(encoder);
-
   // SignatureValue
   if (!wantUnsignedPortionOnly) {
     if (!m_signature) {
@@ -75,6 +72,9 @@ Data::wireEncode(EncodingImpl<TAG>& encoder, bool wantUnsignedPortionOnly) const
 
   // MetaInfo
   totalLength += getMetaInfo().wireEncode(encoder);
+
+  //Function
+  totalLength += getFunction().wireEncode(encoder);
 
   // Name
   totalLength += getName().wireEncode(encoder);
@@ -148,43 +148,43 @@ Data::wireDecode(const Block& wire)
 
   for (++element; element != m_wire.elements_end(); ++element) {
     switch (element->type()) {
-      case tlv::MetaInfo: {
-        if (lastElement >= 2) {
-          NDN_THROW(Error("MetaInfo element is out of order"));
-        }
-        m_metaInfo.wireDecode(*element);
-        lastElement = 2;
-        break;
-      }
-      case tlv::Content: {
-        if (lastElement >= 3) {
-          NDN_THROW(Error("Content element is out of order"));
-        }
-        m_content = *element;
-        lastElement = 3;
-        break;
-      }
-      case tlv::SignatureInfo: {
-        if (lastElement >= 4) {
-          NDN_THROW(Error("SignatureInfo element is out of order"));
-        }
-        m_signature.setInfo(*element);
-        lastElement = 4;
-        break;
-      }
-      case tlv::SignatureValue: {
-        if (lastElement >= 5) {
-          NDN_THROW(Error("SignatureValue element is out of order"));
-        }
-        m_signature.setValue(*element);
-        lastElement = 5;
-        break;
-      }
       case tlv::Function: {
-        if (lastElement >=6) {
+        if (lastElement >=2) {
           NDN_THROW(Error("Function element is out of order"));
         }
         m_function.wireDecode(*element);
+        lastElement = 2;
+        break;
+      }
+      case tlv::MetaInfo: {
+        if (lastElement >= 3) {
+          NDN_THROW(Error("MetaInfo element is out of order"));
+        }
+        m_metaInfo.wireDecode(*element);
+        lastElement = 3;
+        break;
+      }
+      case tlv::Content: {
+        if (lastElement >= 4) {
+          NDN_THROW(Error("Content element is out of order"));
+        }
+        m_content = *element;
+        lastElement = 4;
+        break;
+      }
+      case tlv::SignatureInfo: {
+        if (lastElement >= 5) {
+          NDN_THROW(Error("SignatureInfo element is out of order"));
+        }
+        m_signature.setInfo(*element);
+        lastElement = 5;
+        break;
+      }
+      case tlv::SignatureValue: {
+        if (lastElement >= 6) {
+          NDN_THROW(Error("SignatureValue element is out of order"));
+        }
+        m_signature.setValue(*element);
         lastElement = 6;
         break;
       }

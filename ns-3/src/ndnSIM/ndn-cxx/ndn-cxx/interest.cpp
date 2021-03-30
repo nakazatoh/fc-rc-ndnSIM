@@ -381,7 +381,7 @@ Interest::matchesInterest(const Interest& other) const
 }
 
 void
-Interest::removeHeadFunction()
+Interest::removeHeadFunction() const
 {
     std::string str = this->getFunction().toUri();
     if(this->hasFunction()){
