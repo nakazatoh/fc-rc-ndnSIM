@@ -302,12 +302,12 @@ Interest::wireDecode(const Block& wire)
         break;
       }
       case tlv::ApplicationParameters: {
-        if (lastElement >= 8) {
+        if (lastElement >= 9) {
           break; // ApplicationParameters is non-critical, ignore out-of-order appearance
         }
         BOOST_ASSERT(!hasApplicationParameters());
         m_parameters.push_back(*element);
-        lastElement = 8;
+        lastElement = 9;
         break;
       }
       default: { // unrecognized element
